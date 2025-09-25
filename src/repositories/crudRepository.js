@@ -1,24 +1,23 @@
-export default function crudRepository(schema) {
+export default function crudRepository() {
   return {
-    model: schema,
     create: async function (data) {
-      const newDoc = await this.model.create(data);
+      const newDoc = await this.create(data);
       return newDoc;
     },
     getAll: async function () {
-      const allDocs = await this.model.find();
+      const allDocs = await this.find();
       return allDocs;
     },
     getById: async function (id) {
-      const doc = await this.model.findById(id);
+      const doc = await this.findById(id);
       return doc;
     },
     delete: async function (id) {
-      const response = await this.model.findByIdAndDelete(id);
+      const response = await this.findByIdAndDelete(id);
       return response;
     },
     update: async function (id, data) {
-      const updateDoc = await this.model.findByIdAndUpdate(id, data, {
+      const updateDoc = await this.findByIdAndUpdate(id, data, {
         new: true
       });
       return updateDoc;
