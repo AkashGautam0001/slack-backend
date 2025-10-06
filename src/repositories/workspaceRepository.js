@@ -3,9 +3,24 @@ import Workspace from '../schema/workspace.js';
 import crudRepository from './crudRepository.js';
 import ClientError from '../utils/errors/clientError.js';
 import channelRepository from './channelRepository.js';
+import User from '../schema/user.js';
 
 const workspaceRepository = {
   ...crudRepository(Workspace),
+
+  getWorkspaceDetailsById: async function (workspaceId) {
+    const workspace = await Workspace.findById(workspaceId)
+      .populate('members.memberId', 'username email avatar')
+      .populate('channels');
+    if (!workspace) {
+      throw new ClientError({
+        explaination: 'Invalid data sent from the client',
+        message: 'Workspace not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+    return workspace;
+  },
 
   getWorkspaceByName: async function (workspaceName) {
     const workspace = await Workspace.findOne({
@@ -39,6 +54,7 @@ const workspaceRepository = {
 
   addMemberToWorkspace: async function (workspaceId, memberId, role) {
     const workspace = await Workspace.findById(workspaceId);
+    console.log('Workspace - addMember ', workspace);
 
     if (!workspace) {
       throw new ClientError({
@@ -57,11 +73,20 @@ const workspaceRepository = {
       });
     }
 
+    console.log('isValidUser', isValidUser);
+
     const isMemberAlreadyPartOfWorkspace = workspace.members.find(
-      (member) => member.memberId === memberId
+      (member) => member.memberId.toString() === memberId
     );
 
-    if (!isMemberAlreadyPartOfWorkspace) {
+    console.log('workspace.members', workspace.members);
+    console.log('role', role);
+
+    console.log(
+      'isMemberAlreadyPartOfWorkspace',
+      isMemberAlreadyPartOfWorkspace
+    );
+    if (isMemberAlreadyPartOfWorkspace) {
       throw new ClientError({
         explaination: 'Invalid data sent from the client',
         message: 'User already part of workspace',
@@ -99,7 +124,10 @@ const workspaceRepository = {
       });
     }
 
-    const channel = await channelRepository.create({ name: channelName });
+    const channel = await channelRepository.create({
+      name: channelName,
+      workspaceId: workspaceId
+    });
 
     workspace.channels.push(channel);
 
