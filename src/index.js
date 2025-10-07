@@ -3,9 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 
 import connectDB from './config/dbConfig.js';
 import { PORT } from './config/serverConfig.js';
-const app = express();
 import apiRouter from './routes/apiRoutes.js';
 
+const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -1,0 +1,18 @@
+import Queue from 'bull';
+import Redis from 'ioredis';
+
+import { redisOptions } from '../config/redisConfig.js';
+
+export default new Queue('mailQueue', {
+  // redis: redisOptions,
+  createClient: function (type) {
+    switch (type) {
+      case 'client':
+        return new Redis(redisOptions);
+      case 'subscriber':
+        return new Redis(redisOptions);
+      default:
+        return new Redis(redisOptions);
+    }
+  }
+});

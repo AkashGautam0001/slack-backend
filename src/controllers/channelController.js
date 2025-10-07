@@ -1,10 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
+
+import { getChannelByIdService } from '../services/channelService.js';
 import {
   customErrorResponse,
   internalErrorResponse,
   successResponse
 } from '../utils/common/responseObject.js';
-import { getChannelByIdService } from '../services/channelService.js';
 
 export const getChannelByIdController = async (req, res) => {
   try {
