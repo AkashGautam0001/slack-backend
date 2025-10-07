@@ -233,7 +233,8 @@ export const addMemberToWorkspaceService = async (
 
     addEmailtoMailQueue({
       ...workspaceJoinMail(workspace.name),
-      to: isValidUser.email
+      // to: isValidUser.email
+      to: 'akashfoundation.in@gmail.com'
     });
 
     const isValidUser = await userRepository.getById(memberId);
