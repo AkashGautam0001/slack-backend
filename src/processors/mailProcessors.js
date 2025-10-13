@@ -39,5 +39,3 @@ mailWorker.on('completed', (job) => {
 mailWorker.on('error', (error) => {
   console.log(`Error processing job ${job.id}`, error);
 });
-
-export default mailWorker;

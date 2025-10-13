@@ -231,12 +231,6 @@ export const addMemberToWorkspaceService = async (
       });
     }
 
-    addEmailtoMailQueue({
-      ...workspaceJoinMail(workspace.name),
-      // to: isValidUser.email
-      to: 'akashfoundation.in@gmail.com'
-    });
-
     const isValidUser = await userRepository.getById(memberId);
     if (!isValidUser) {
       throw new ClientError({
@@ -261,6 +255,11 @@ export const addMemberToWorkspaceService = async (
       memberId,
       role
     );
+
+    addEmailtoMailQueue({
+      ...workspaceJoinMail(workspace.name),
+      to: isValidUser.email
+    });
 
     return response;
   } catch (error) {
