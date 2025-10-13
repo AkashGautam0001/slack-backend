@@ -9,7 +9,7 @@ export default function crudRepository(model) {
       return allDocs;
     },
     getById: async function (id) {
-      const doc = await model.findById(id);
+      const doc = await model.findById(id).select('-password');
       return doc;
     },
     delete: async function (id) {

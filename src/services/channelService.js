@@ -3,6 +3,8 @@ import { StatusCodes } from 'http-status-codes';
 import channelRepository from '../repositories/channelRepository.js';
 import ClientError from '../utils/errors/clientError.js';
 import { isUserMemberOfWorspace } from './workspaceService.js';
+import messageRepository from '../repositories/messageRepository.js';
+import { createDeflate } from 'zlib';
 
 export const getChannelByIdService = async (channelId, userId) => {
   try {
@@ -33,7 +35,22 @@ export const getChannelByIdService = async (channelId, userId) => {
       });
     }
 
-    return channel;
+    const messages = await messageRepository.getPaginatedMessages(
+      {
+        channelId: channelId
+      },
+      1,
+      20
+    );
+
+    return {
+      _id: channel._id,
+      name: channel.name,
+      createdAt: channel.createdAt,
+      updatedAt: channel.updatedAt,
+      workspaceId: channel.workspaceId,
+      messages
+    };
   } catch (error) {
     console.log('Get channel by id service error', error);
     throw error;
