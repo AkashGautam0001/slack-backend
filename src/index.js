@@ -2,7 +2,7 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-
+import cors from 'cors';
 import connectDB from './config/dbConfig.js';
 import { PORT } from './config/serverConfig.js';
 import apiRouter from './routes/apiRoutes.js';
@@ -13,6 +13,12 @@ import ChannelSocketHandlers from './controllers/channelSocketController.js';
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
+
+app.use(
+  cors({
+    origin: '*'
+  })
+);
 
 app.use('/ui', bullServerAdapter.getRouter());
 app.use(express.json());
